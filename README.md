@@ -1,1 +1,229 @@
 index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mizan – Government AI model selection</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700;800&display=swap">
+<style>
+:root{--bg:#f3f5f4;--surface:#fff;--ink:#12201f;--muted:#5b6b69;--line:#d5dddb;--brand:#0f4c4a;--brand-ink:#fff;--gold:#b8860b;--ok:#17724a;--okbg:#e3f3ea;--bad:#a63a2b;--badbg:#f8e6e2;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1514;--surface:#15201f;--ink:#e6efed;--muted:#97aaa7;--line:#2a3a38;--brand:#5fc2b8;--brand-ink:#08201e;--gold:#e0b64a;--ok:#6fd4a0;--okbg:#14352a;--bad:#f09a8c;--badbg:#3a1d19}}
+:root[data-theme="dark"]{--bg:#0d1514;--surface:#15201f;--ink:#e6efed;--muted:#97aaa7;--line:#2a3a38;--brand:#5fc2b8;--brand-ink:#08201e;--gold:#e0b64a;--ok:#6fd4a0;--okbg:#14352a;--bad:#f09a8c;--badbg:#3a1d19}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 56px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.08;margin:0 0 10px;font-weight:800;letter-spacing:-.02em;max-width:18ch}
+h2{font-size:20px;margin:0 0 12px;font-weight:700}
+p{margin:0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:28px}
+.brand{font-weight:800;font-size:18px;display:flex;align-items:center;gap:10px}
+.brand i{width:26px;height:26px;border:2px solid var(--brand);border-radius:50%;position:relative;display:inline-block}
+.brand i:after{content:"";position:absolute;left:50%;top:3px;bottom:3px;width:2px;background:var(--gold);transform:translateX(-50%)}
+.lead{color:var(--muted);max-width:60ch;font-size:17px}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:24px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px}
+.time .row{display:flex;align-items:center;gap:10px;font-size:14px;margin-top:8px}
+.time .lbl{width:84px;color:var(--muted);flex:none}
+.bar{height:14px;border-radius:3px;background:var(--line);flex:1;overflow:hidden}
+.bar b{display:block;height:100%;background:var(--muted);transition:width .4s}
+.bar b.new{background:var(--brand)}
+.big{font-size:34px;font-weight:800;line-height:1}
+.small{font-size:13px;color:var(--muted)}
+.main{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start}
+@media(max-width:860px){.main{grid-template-columns:1fr}}
+.side{position:sticky;top:12px}
+@media(max-width:860px){.side{position:static}}
+label{display:block;font-weight:700;font-size:14px;margin:14px 0 6px}
+label:first-of-type{margin-top:0}
+select,button{font:inherit}
+select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+input[type=range]{width:100%;accent-color:var(--brand)}
+.sl{display:flex;justify-content:space-between;font-size:14px;margin-top:10px}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.m{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:16px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto;gap:8px 16px}
+.m.blocked{background:transparent;border-style:dashed}
+.m h3{margin:0;font-size:18px}
+.vendor{color:var(--muted);font-size:14px}
+.score{text-align:right}
+.score .big{font-size:30px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;grid-column:1/-1}
+.chip{font-size:12.5px;padding:2px 8px;border-radius:4px;font-weight:500}
+.chip.y{background:var(--okbg);color:var(--ok)}
+.chip.n{background:var(--badbg);color:var(--bad)}
+.why{grid-column:1/-1;color:var(--bad);font-size:14px;font-weight:500}
+.perf{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:13px;color:var(--muted)}
+.perf .bar{height:6px;margin-top:4px}
+.btn{background:var(--brand);color:var(--brand-ink);border:0;padding:9px 16px;border-radius:8px;font-weight:700;cursor:pointer}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--brand);border:1px solid var(--brand)}
+.gate{margin-top:28px}
+.gate li{list-style:none;padding:10px 0;border-top:1px solid var(--line)}
+.gate ul{padding:0;margin:12px 0}
+.gate label{display:flex;gap:10px;margin:0;font-weight:500;align-items:flex-start}
+.gate input{margin-top:5px;accent-color:var(--brand)}
+.prog{display:flex;align-items:center;gap:12px}
+.status{font-weight:700}
+.align{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:28px}
+.align h3{margin:0 0 6px;font-size:16px}
+.note{margin-top:24px;font-size:13px;color:var(--muted)}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><i></i>Mizan</div>
+    <button class="btn ghost" id="theme" type="button">Switch theme</button>
+  </div>
+
+  <h1>Pick an approved AI model in minutes, not weeks.</h1>
+  <p class="lead">Describe your use case. Mizan checks every model in the approved registry against your security and regulatory needs, ranks the ones that pass, and blocks the rest with a reason.</p>
+
+  <div class="metrics">
+    <div class="card time">
+      <div class="small">Evaluation time for your shortlist</div>
+      <div class="row"><span class="lbl">Manual</span><div class="bar"><b id="bManual" style="width:100%"></b></div><span id="tManual">–</span></div>
+      <div class="row"><span class="lbl">With Mizan</span><div class="bar"><b class="new" id="bNew" style="width:20%"></b></div><span id="tNew">–</span></div>
+    </div>
+    <div class="card"><div class="big" id="cut">80%</div><div class="small">less evaluation time, because benchmarks and compliance checks are already on file for every registry model.</div></div>
+    <div class="card"><div class="big" id="pass">–</div><div class="small">of registry models pass every mandatory control for your inputs. Only those can be deployed.</div></div>
+  </div>
+
+  <div class="main">
+    <aside class="card side" aria-label="Your requirements">
+      <h2>Your requirements</h2>
+      <label for="uc">Use case</label>
+      <select id="uc">
+        <option value="chat">Citizen service chatbot</option>
+        <option value="summarize">Document summarisation</option>
+        <option value="legal">Legal and policy drafting</option>
+        <option value="translate">Arabic–English translation</option>
+      </select>
+      <label for="cls">Data classification</label>
+      <select id="cls">
+        <option value="0">Public</option>
+        <option value="1" selected>Internal</option>
+        <option value="2">Confidential</option>
+        <option value="3">Secret</option>
+      </select>
+      <label for="dep">Where it will run</label>
+      <select id="dep">
+        <option value="onprem">On-premises</option>
+        <option value="uaecloud" selected>UAE sovereign cloud</option>
+        <option value="public">Public cloud</option>
+      </select>
+      <label>What matters most</label>
+      <div class="sl"><span>Answer quality</span></div><input type="range" id="wP" min="0" max="10" value="8" aria-label="Answer quality weight">
+      <div class="sl"><span>Speed</span></div><input type="range" id="wS" min="0" max="10" value="4" aria-label="Speed weight">
+      <div class="sl"><span>Low cost</span></div><input type="range" id="wC" min="0" max="10" value="3" aria-label="Cost weight">
+    </aside>
+
+    <section aria-live="polite">
+      <h2>Ranked models</h2>
+      <div id="list"></div>
+    </section>
+  </div>
+
+  <section class="card gate hide" id="gate">
+    <h2 id="gateTitle">Deployment gate</h2>
+    <p class="small">Every item is mandatory. Deployment stays locked until all are confirmed.</p>
+    <ul id="checks"></ul>
+    <div class="prog"><span class="status" id="gstat"></span><button class="btn" id="deploy" type="button" disabled>Approve for deployment</button></div>
+  </section>
+
+  <section class="align" aria-label="Policy alignment">
+    <div class="card"><h3>UAE National Strategy for AI 2031</h3><p class="small">Supports faster government adoption of AI and favours UAE-built models, which strengthens the national AI ecosystem.</p></div>
+    <div class="card"><h3>UAE AI Governance Framework</h3><p class="small">Controls map to privacy, security, transparency and fairness: data residency, audit logging, bias testing and security certification.</p></div>
+    <div class="card"><h3>Use case repository</h3><p class="small">Each entity's chosen use case and result is saved, so the next entity with the same need starts from a verified shortlist.</p></div>
+  </section>
+  <p class="note">All models, scores and compliance results on this page are sample data for demonstration. In production they come from the approved model registry, benchmark service and compliance framework APIs.</p>
+</div>
+
+<script>
+var CLS=["Public","Internal","Confidential","Secret"];
+var DEP={onprem:"On-premises",uaecloud:"UAE sovereign cloud",public:"Public cloud"};
+var MODELS=[
+ {n:"Falcon-H1 34B",v:"TII, UAE",uae:1,dep:["onprem","uaecloud","public"],max:3,c:{res:1,aud:1,pdpl:1,bias:1,cert:1},s:{chat:82,summarize:84,legal:76,translate:80},sp:80,co:4},
+ {n:"Jais 70B",v:"Inception and MBZUAI, UAE",uae:1,dep:["onprem","uaecloud"],max:3,c:{res:1,aud:1,pdpl:1,bias:1,cert:1},s:{chat:88,summarize:82,legal:80,translate:90},sp:62,co:3},
+ {n:"Llama 3.3 70B",v:"Meta, open weights",dep:["onprem","uaecloud","public"],max:2,c:{res:1,aud:1,pdpl:1,bias:1,cert:0},s:{chat:85,summarize:86,legal:79,translate:78},sp:66,co:3},
+ {n:"Falcon 3 7B",v:"TII, UAE",uae:1,dep:["onprem","uaecloud","public"],max:3,c:{res:1,aud:1,pdpl:1,bias:1,cert:1},s:{chat:66,summarize:68,legal:58,translate:64},sp:95,co:5},
+ {n:"Mistral Large",v:"Mistral AI",dep:["uaecloud","public"],max:1,c:{res:1,aud:1,pdpl:1,bias:0,cert:0},s:{chat:86,summarize:85,legal:82,translate:80},sp:70,co:2},
+ {n:"Offshore frontier API",v:"Hosted outside the UAE",dep:["public"],max:0,c:{res:0,aud:1,pdpl:0,bias:1,cert:1},s:{chat:92,summarize:91,legal:88,translate:89},sp:85,co:2}
+];
+var CN={res:"Data stays in UAE",aud:"Audit logging",pdpl:"Data protection aligned",bias:"Bias tested",cert:"Security certified"};
+var MAND=["res","aud","bias"];
+var $=function(i){return document.getElementById(i)};
+var picked=null;
+
+function evaluate(){
+ var uc=$("uc").value,cls=+$("cls").value,dep=$("dep").value;
+ var wP=+$("wP").value,wS=+$("wS").value,wC=+$("wC").value,tot=(wP+wS+wC)||1;
+ return MODELS.map(function(m){
+  var why=[];
+  if(m.dep.indexOf(dep)<0)why.push("Not available on "+DEP[dep].toLowerCase()+".");
+  if(cls>m.max)why.push("Not approved for "+CLS[cls].toLowerCase()+" data (limit: "+CLS[m.max].toLowerCase()+").");
+  MAND.forEach(function(k){if(!m.c[k]&&(k!=="res"||cls>0))why.push("Missing control: "+CN[k].toLowerCase()+".")});
+  var fit=Math.round((m.s[uc]*wP+m.sp*wS+m.co*20*wC)/tot+(m.uae?2:0));
+  return {m:m,why:why,fit:Math.min(fit,99),uc:m.s[uc]};
+ }).sort(function(a,b){return (a.why.length>0)-(b.why.length>0)||b.fit-a.fit});
+}
+
+function render(){
+ var r=evaluate(),ok=r.filter(function(x){return !x.why.length}),h="";
+ r.forEach(function(x){
+  var m=x.m,bl=x.why.length>0;
+  h+='<article class="m'+(bl?' blocked':'')+'"><div><h3>'+m.n+'</h3><div class="vendor">'+m.v+'</div></div>';
+  h+=bl?'<div class="score small">Blocked</div>':'<div class="score"><div class="big">'+x.fit+'</div><div class="small">fit score</div></div>';
+  h+='<div class="chips">'+Object.keys(CN).map(function(k){return '<span class="chip '+(m.c[k]?'y':'n')+'">'+(m.c[k]?'Pass: ':'Fail: ')+CN[k]+'</span>'}).join("")+'</div>';
+  if(bl)h+='<div class="why">'+x.why.join(" ")+'</div>';
+  else{
+   h+='<div class="perf"><div>Use-case accuracy '+x.uc+'<div class="bar"><b class="new" style="width:'+x.uc+'%"></b></div></div><div>Speed '+m.sp+'<div class="bar"><b class="new" style="width:'+m.sp+'%"></b></div></div><div>Cost efficiency '+m.co*20+'<div class="bar"><b class="new" style="width:'+m.co*20+'%"></b></div></div></div>';
+   h+='<div><button class="btn" type="button" data-pick="'+m.n+'">'+(picked===m.n?'Selected':'Select for deployment')+'</button></div>';
+  }
+  h+='</article>';
+ });
+ $("list").innerHTML=h;
+ var n=Math.min(ok.length,3),man=n*10,neu=n*2;
+ $("tManual").textContent=man+" days";$("tNew").textContent=neu+" days";
+ $("bNew").style.width=man?"20%":"0";$("bManual").style.width=man?"100%":"0";
+ $("pass").textContent=ok.length+" of "+MODELS.length;
+ if(picked&&!ok.some(function(x){return x.m.n===picked})){picked=null;$("gate").classList.add("hide")}
+}
+
+function buildGate(name){
+ picked=name;
+ var items=["Use case and data classification recorded in the government use case repository","Model version matches the approved registry entry","Hosting location confirmed: "+DEP[$("dep").value].toLowerCase(),"Audit logging switched on and sent to the entity's security team","Bias and accuracy test passed on a sample of the entity's own data","Human review step defined for decisions that affect people","Named owner assigned for incident response"];
+ $("gateTitle").textContent="Deployment gate: "+name;
+ $("checks").innerHTML=items.map(function(t,i){return '<li><label><input type="checkbox" data-c="'+i+'">'+t+'</label></li>'}).join("");
+ $("gate").classList.remove("hide");
+ updGate();render();
+ $("gate").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function updGate(){
+ var b=document.querySelectorAll("#checks input"),d=0;
+ b.forEach(function(x){if(x.checked)d++});
+ $("gstat").textContent=d+" of "+b.length+" confirmed";
+ $("deploy").disabled=d<b.length;
+ $("deploy").textContent="Approve for deployment";
+}
+
+document.addEventListener("change",function(e){
+ if(e.target.matches("select,input[type=range]"))render();
+ if(e.target.matches("#checks input"))updGate();
+});
+document.addEventListener("click",function(e){
+ var p=e.target.closest("[data-pick]");if(p)buildGate(p.getAttribute("data-pick"));
+ if(e.target===$("deploy"))$("deploy").textContent="Approved. Added to the registry log.";
+});
+document.addEventListener("input",function(e){if(e.target.matches("input[type=range]"))render()});
+$("theme").addEventListener("click",function(){
+ var r=document.documentElement,dark=r.getAttribute("data-theme")==="dark"||(!r.getAttribute("data-theme")&&matchMedia("(prefers-color-scheme:dark)").matches);
+ r.setAttribute("data-theme",dark?"light":"dark");
+});
+render();
+</script>
+</body>
+</html>
